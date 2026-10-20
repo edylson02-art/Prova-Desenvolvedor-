@@ -9,6 +9,8 @@ export function App() {
   const [ate, setAte] = useState('2026-10-31');
 
   const lista = listarTarefas({ tarefas, empresas, empresaId, de, ate });
+  // com o Grupo Aurora escolhido aparecem tarefas de várias empresas
+  const nomeEmpresa = Object.fromEntries(empresas.map((e) => [e.id, e.nome]));
 
   return (
     <main style={{ fontFamily: 'system-ui', maxWidth: 720, margin: '32px auto', padding: '0 16px' }}>
@@ -27,11 +29,11 @@ export function App() {
       ) : (
         <table width="100%" cellPadding={6}>
           <thead>
-            <tr><th align="left">Data</th><th align="left">Tarefa</th><th align="left">Status</th></tr>
+            <tr><th align="left">Data</th><th align="left">Empresa</th><th align="left">Tarefa</th><th align="left">Status</th></tr>
           </thead>
           <tbody>
             {lista.map((t) => (
-              <tr key={t.id}><td>{t.criada_em}</td><td>{t.titulo}</td><td>{t.status}</td></tr>
+              <tr key={t.id}><td>{t.criada_em}</td><td>{nomeEmpresa[t.empresa_id]}</td><td>{t.titulo}</td><td>{t.status}</td></tr>
             ))}
           </tbody>
         </table>
