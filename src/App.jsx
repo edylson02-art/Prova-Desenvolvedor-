@@ -2,6 +2,20 @@ import { useState } from 'react';
 import empresas from '../data/empresas.json';
 import tarefas from '../data/tarefas.json';
 import { listarTarefas } from './tarefas.js';
+import { gerarCSV } from './exportar.js';
+
+// Baixa exatamente as tarefas que estão na tela (empresa e período escolhidos).
+function baixarCSV(lista) {
+  const arquivo = new Blob([gerarCSV(lista)], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(arquivo);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `tarefas-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
 
 export function App() {
   const [empresaId, setEmpresaId] = useState(1);
@@ -21,6 +35,9 @@ export function App() {
         </select>
         <label>De <input type="date" value={de} onChange={(e) => setDe(e.target.value)} /></label>
         <label>Até <input type="date" value={ate} onChange={(e) => setAte(e.target.value)} /></label>
+        <button type="button" onClick={() => baixarCSV(lista)}>
+          Exportar CSV
+        </button>
       </div>
       {lista.length === 0 ? (
         <p>Nenhuma tarefa no período.</p>
